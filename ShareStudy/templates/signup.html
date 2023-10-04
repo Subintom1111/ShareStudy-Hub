@@ -80,6 +80,15 @@ ShareStudy Hub
 <body>
     <div class="signup-container">
         <h2>SIGNUP FOR STUDENT</h2><br>
+
+        {% for message in messages %}
+
+                  <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                  <strong>{{message}}</strong> 
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>
+
+               {% endfor %}
         <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post">  {% csrf_token %}
             <div class="form-group">
                 <label for="first-name">First Name:</label>
@@ -91,17 +100,7 @@ ShareStudy Hub
                 <input type="text" id="last-name" name="last_name" placeholder=" Enter the Last Name :"required onchange="validateLastName()"><br>
                 <span id="last-name-error" class="error-message"></span>
             </div>
-            <div class="form-group">
-                <label for="department">Department:</label>
-                <select id="department" name="department" required onchange="validateDepartment()"><br>
-                    <option value="" disabled selected>Select your department</option>
-                    <option value="HR">Human Resources</option>
-                    <option value="IT">Information Technology</option>
-                    <option value="Marketing">Marketing</option>
-                    <!-- Add more department options as needed -->
-                </select>
-                <span id="department-error" class="error-message"></span>
-            </div>
+            
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" placeholder=" Enter the Email :" required onchange="validateEmail()"><br>
@@ -199,7 +198,8 @@ ShareStudy Hub
             }
         }
 
-        function validateFirstName() {
+        function validateFirstName() 
+        {
             const firstNameInput = document.getElementById('first-name');
             const firstName = firstNameInput.value;
             const firstNameError = document.getElementById('first-name-error');
@@ -207,16 +207,21 @@ ShareStudy Hub
             firstNameError.textContent = ''; // Clear any existing error message
         
             // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
-            const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed
+            const namePattern = /^[A-Za-z- '' ]{2,50}$/; // Adjust as needed
 
-            
-            if (!namePattern.test(firstName)) {
-                firstNameError.textContent = ' Name is invalid';
-            } else if (/ {2,}/.test(firstName)) {
-                // Check for multiple consecutive spaces
-                firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
-            }
+                if (!namePattern.test(firstName)) 
+                {
+                    firstNameError.textContent = ' Name is invalid';
+
+            }   
+            else if (/ {2,}/.test(firstName))
+             {
+                    // Check for multiple consecutive spaces
+                    firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
+             }
+             
         }
+        
         
 
 
