@@ -92,19 +92,19 @@ ShareStudy Hub
         <form id="signup-form" action="http://127.0.0.1:8000/signup/" method="post">  {% csrf_token %}
             <div class="form-group">
                 <label for="first-name">First Name:</label>
-                <input type="text" id="first-name" name="first_name" placeholder=" Enter the First Name :"required onchange="validateFirstName()"><br>
-                <span id="first-name-error" class="error-message"></span>
+                <input type="text" id="first_name" name="first_name" placeholder=" Enter the First Name :"required onchange="validateFirstName()"><br>
+                <span id="first_name_error" class="error-message"></span>
             </div>
             <div class="form-group">
                 <label for="last-name">Last Name:</label>
-                <input type="text" id="last-name" name="last_name" placeholder=" Enter the Last Name :"required onchange="validateLastName()"><br>
-                <span id="last-name-error" class="error-message"></span>
+                <input type="text" id="last_name" name="last_name" placeholder=" Enter the Last Name :"required onchange="validateLastName()"><br>
+                <span id="last_name_error" class="error-message"></span>
             </div>
             
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" placeholder=" Enter the Email :" required onchange="validateEmail()"><br>
-                <span id="email-error" class="error-message"></span>
+                <span id="email_error" class="error-message"></span>
             </div>
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -114,12 +114,12 @@ ShareStudy Hub
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" placeholder=" Enter the Password :" required onchange="validatePassword()"><br>
-                <span id="password-error" class="error-message"></span>
+                <span id="password_error" class="error-message"></span>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" name="confirm_password" placeholder=" Enter to Confirm Password : "required onchange="validateConfirmPassword()"><br>
-                <span id="confirm-password-error" class="error-message"></span>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder=" Enter to Confirm Password : "required onchange="validateConfirmPassword()"><br>
+                <span id="confirm_password_error" class="error-message"></span>
             </div>
             
                 <button type="submit" class="submit-btn" onclick="validateSignup()">Sign Up</button>
@@ -130,168 +130,139 @@ ShareStudy Hub
     </div>
 
     <script>
-        function validateEmail() {
-            const email = document.getElementById('email').value;
-            const emailError = document.getElementById('email-error');
 
-            emailError.textContent = '';
-
-            // Validate email format (no uppercase letters)
-            const emailPattern = /^[a-z0-9._-]+@[a-z.-]+\.[a-z]{2,4}$/;
-            if (!emailPattern.test(email)) {
-                emailError.textContent = 'Invalid Email !!';
+        document.addEventListener("DOMContentLoaded", function () {
+          var firstName = document.getElementById("first_name");
+          var lastName = document.getElementById("last_name");
+          var username = document.getElementById("username");
+          var email = document.getElementById("email");
+          var password = document.getElementById("password");
+          var confirmPassword = document.getElementById("confirm_password");
+        
+        
+          var firstNameError = document.getElementById("first_name_error");
+          var lastNameError = document.getElementById("last_name_error");
+          var usernameError = document.getElementById("username-error");
+          var emailError = document.getElementById("email_error");
+          var passwordError = document.getElementById("password_error");
+          var confirmPasswordError = document.getElementById("confirm_password_error");
+        
+          // Function to display error messages
+          function displayErrorMessage(fieldElement, errorElement, message) {
+            fieldElement.classList.add("is-invalid");
+            errorElement.textContent = message;
+          }
+        
+          // Function to clear error messages
+          function clearErrorMessage(fieldElement, errorElement) {
+            fieldElement.classList.remove("is-invalid");
+            errorElement.textContent = "";
+          }
+        
+          // Event listeners for real-time validation
+          firstName.addEventListener("input", function () {
+            clearErrorMessage(firstName, firstNameError);
+            if (firstName.value.trim() === "") {
+              displayErrorMessage(firstName, firstNameError, "First name cannot be empty.");
+            } else if (firstName.value.includes(" ")) {
+              displayErrorMessage(firstName, firstNameError, "First name cannot contain spaces.");
+            } else if (!/^[A-Za-z]+$/.test(firstName.value)) {
+              displayErrorMessage(firstName, firstNameError, "First name must contain only characters.");
             }
+          });
+
+          username.addEventListener("input", function () {
+        clearErrorMessage(username, usernameError);
+        const value = username.value.trim();
+
+        if (value === "") {
+            username.classList.add("is-invalid");
+            usernameError.textContent = "Username cannot be empty.";
+        } else if (value.includes(" ")) {
+            username.classList.add("is-invalid");
+            usernameError.textContent = "Username cannot contain spaces.";
+        } else if (/[A-Z]/.test(value)) {
+            username.classList.add("is-invalid");
+            usernameError.textContent = "Username cannot contain uppercase letters.";
+        } 
+        else if (/[0-9]/.test(value)) {
+            username.classList.add("is-invalid");
+            usernameError.textContent = "Username cannot contain Numbers.";
+        }else {
+            clearErrorMessage(username, usernameError);
         }
+    });
         
-
-        function validateUsername() {
-            const username = document.getElementById('username').value;
-            const usernameError = document.getElementById("username-error");
-            
-
-            usernameError.textContent = '';
-            const regex = /^[a-zA-Z][a-zA-Z0-9_-]{2,19}$/;  // Setting Up Regular Expression
-            const match = username.match(regex);
-            // const noMatch = username.match(/\s/)
-        
-            if (!match) {
-                usernameError.style.color = "";
-                if (username.trim() === "") {
-                    usernameError.textContent = "This Field Cannot be empty";
-                }else if (!username.match(/^[a-zA-Z]/)) {
-                    usernameError.textContent = " Username must start with a letter.";
-                }else if (!username.match(/[a-zA-Z0-9_-]{2,19}$/)) {
-                    usernameError.textContent = " Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, or hyphens.";
-                }else if (username.match(/\s/)){
-                    usernameError.textContent = "White Space Not Allowed";
-                }else{
-                    usernameError.textContent = " Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, or hyphens.";
-                }
-                return false;
-            } 
-        }
-  
-
-        function validatePassword() {
-            const password = document.getElementById('password').value;
-            const passwordError = document.getElementById('password-error');
-
-            passwordError.textContent = '';
-
-            // Validate password (at least 8 characters, with complexity)
-            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-            if (!passwordPattern.test(password)) {
-                passwordError.textContent = 'Password must contain at least one numeric digit, one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
+          lastName.addEventListener("input", function () {
+            clearErrorMessage(lastName, lastNameError);
+            if (lastName.value.trim() === "") {
+              displayErrorMessage(lastName, lastNameError, "Last name cannot be empty.");
+            } else if (!/^[A-Za-z]+$/.test(lastName.value)) {
+              displayErrorMessage(lastName, lastNameError, "Last name must contain only characters.");
             }
-        }
-
-        function validateConfirmPassword() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            const confirmPasswordError = document.getElementById('confirm-password-error');
-
-            confirmPasswordError.textContent = '';
-
-            // Confirm password match
-            if (password !== confirmPassword) {
-                confirmPasswordError.textContent = 'Passwords do not match';
+          });
+      
+          email.addEventListener("input", function () {
+            clearErrorMessage(email, emailError);
+            const emailRegex = /^[a-z0-9]+@[^\s@]+\.[^\s@]+$/; // Allow lowercase letters, numbers, and any domain name
+            if (email.value.trim() === "") {
+              displayErrorMessage(email, emailError, "Email cannot be empty.");
+            } else if (!emailRegex.test(email.value)) {
+              displayErrorMessage(email, emailError, "Please enter a valid email address.");
             }
-        }
-
-        function validateFirstName() 
-        {
-            const firstNameInput = document.getElementById('first-name');
-            const firstName = firstNameInput.value;
-            const firstNameError = document.getElementById('first-name-error');
+          });
+          
+          
+          
         
-            firstNameError.textContent = ''; // Clear any existing error message
-        
-            // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
-            const namePattern = /^[A-Za-z- '' ]{2,50}$/; // Adjust as needed
-
-                if (!namePattern.test(firstName)) 
-                {
-                    firstNameError.textContent = ' Name is invalid';
-
-            }   
-            else if (/ {2,}/.test(firstName))
-             {
-                    // Check for multiple consecutive spaces
-                    firstNameError.textContent = 'Multiple consecutive spaces are not allowed';
-             }
-             
-        }
-        
-        
-
-
-        function validateLastName() {
-            const lastNameInput = document.getElementById('last-name');
-            const lastName = lastNameInput.value;
-            const lastNameError = document.getElementById('last-name-error');
+          password.addEventListener("input", function () {
+            clearErrorMessage(password, passwordError);
             
-            lastNameError.textContent = ''; // Clear any existing error message
-            
-                // Validate the first name (between 2 and 50 characters, letters, hyphens, and apostrophes)
-            const namePattern = /^[A-Za-z-' ]{2,50}$/; // Adjust as needed   
+            const isValid = /^(?=.*[A-Z])(?=.*[!@#$%^&()_+{}\[\]:;<>,.?~\\])(?!.*\s).{8,}$/.test(password.value);
 
-            if (!namePattern.test(lastName)) {
-                lastNameError.textContent = ' Name is invalid';
-            } else if (/ {2,}/.test(lastName)) {
-                // Check for multiple consecutive spaces
-                lastNameError.textContent = 'Multiple consecutive spaces are not allowed';
+          
+            if (!isValid) {
+              displayErrorMessage(password, passwordError, "Password must contain uppercase, special character, at least 8 characters, and no spaces.");
+            } else {
+              clearErrorMessage(password, passwordError); // Clear the error message if the password is valid
             }
-        }
-
-        function validateDepartment() {
-            const department = document.getElementById('department').value;
-            const departmentError = document.getElementById('department-error');
-            
-            departmentError.textContent = '';
-            
-                // You can add specific validation rules for the department here if needed.
-            
-            if (!department) {
-                departmentError.textContent = 'Please select a department.';
+          });
+          
+          
+          
+      
+         
+        
+          confirmPassword.addEventListener("input", function () {
+            clearErrorMessage(confirmPassword, confirmPasswordError);
+            if (confirmPassword.value !== password.value) {
+              displayErrorMessage(confirmPassword, confirmPasswordError, "password dosenot match");
             }
-        }
-            
-        
-            
-        
-        
-        
-
-        
-
-        function validateSignup() {
-            validateEmail();
-            validateUsername();
-            validatePassword();
-            validateConfirmPassword();
-            validateFirstName();
-            validateLastName();
-            validateDepartment();
-
-            const emailError = document.getElementById('email-error').textContent;
-            const usernameError = document.getElementById('username-error').textContent;
-            const passwordError = document.getElementById('password-error').textContent;
-            const confirmPasswordError = document.getElementById('confirm-password-error').textContent;
-            const firstNameError = document.getElementById('first-name-error').textContent;
-            const lastNameError = document.getElementById('last-name-error').textContent;
-            const departmentError = document.getElementById('department-error').textContent;
-            const successMessage = document.getElementById('success-message');
-
-            // If any error messages exist, do not proceed
-            if (emailError || usernameError || passwordError || confirmPasswordError || firstNameError || lastNameError  || departmentError) {
-                return;
+          });
+      
+      
+          function submitForm(e) {
+            // Check if any error messages exist
+            if (
+              firstNameError.textContent ||
+              lastNameError.textContent ||
+              emailError.textContent ||
+              usernameError.textContent ||
+              passwordError.textContent ||
+              confirmPasswordError.textContent
+            ) {
+              e.preventDefault(); // Prevent form submission if there are errors
             }
-
-            // If all validations pass, show success message
-            successMessage.textContent = 'Registration successful!';
-            // You can add code here to submit the form or perform other actions if needed.
-        }
-    </script>
+          }
+        
+          // Event listener for form submission
+          document.getElementById("signup-form").addEventListener("submit", submitForm);
+        
+         
+        });
+        
+      
+      </script>
 </body>
 </html>
 {% endblock form %}
