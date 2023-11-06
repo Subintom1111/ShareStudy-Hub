@@ -50,7 +50,7 @@
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
-          <li><a class="nav-link" href="index/">Home</a></li>
+          <li><a class="nav-link" href="/loginhome">Home</a></li>
           <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Examination</a></li>
@@ -98,7 +98,7 @@
                 <img src="{% static 'img/user.png' %}" style="height:150px;width:150px;border-radius:50%">
                 {% endif %}
             </div>
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% if status %}
                     <div class="alert alert-primary">{{status}}</div>
@@ -107,58 +107,80 @@
                 <center><h3>Update Proflie</h3></center><br><br>
                 <div class="form-group">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>First Name</label>
-                            <input type="text" class="form-control" name="fname" placeholder="Enter First Name" value="{{user.first_name}}">
-                        </div>
+                        <div class="form-group">
+                       <label for="id_first_name">First Name:</label>
+                       <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+                       <span id="first-name-error" class="text-danger"></span>
+                       </div>
                         
-                        <div class="col-md-6">
-                            <label>Last Name</label>
-                            <input type="text" class="form-control" name="lname" placeholder="Enter Last Name" value="{{user.last_name}}">
+                        <div class="form-group">
+                        <label for="id_last_name">Last Name:</label>
+                        <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
+                        <span id="last-name-error" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">
                         </div>
                         <div class="col-md-6">
-                            <label>Profile Picture</label>
-                            <input type="file" class="form-control" name="image">
-                        </div>
+                          <label>Contact Number</label>
+                          <input type="text" value="{{user.profile.contact}}" class="form-control" name="contact" placeholder="Enter Contact Number" pattern="[0-9]{10}" title="Number must contain 10 digits only!!">
+                      </div>
                     </div>
                 </div>
                 <br><br>
                 <div class="form-group">
                     <div class="row">
+                        
                         <div class="col-md-6">
-                            <label>Contact Number</label>
-                            <input type="text" value="{{data.contact_number}}" class="form-control" name="contact" placeholder="Enter Contact Number" pattern="[0-9]{10}" title="Number must contain 10 digits only!!">
-                        </div>
-                        <div class="col-md-6">
-                            <label>Department</label>
-                            <input type="text" class="form-control" name="Department" placeholder="Enter Department" 
-                            value="{{data.department}}">
+                            <label>Course</label>
+                            <select name="course" value="{{user.profile.course}}" class="form-control">
+                              <option value="">Select a Course</option>
+
+                              {% if user.profile.course == "Software" %}
+                              <option value="Software" selected>Software</option>
+                              {% else %}
+                              <option value="Software">Software</option>
+                              {% endif %}
+                              
+                              {% if user.profile.course == "Cloud" %}
+                              <option value="Cloud" selected>Cloud</option>
+                              {% else %}
+                              <option value="Cloud">Cloud</option>
+                              {% endif %}
+
+                              {% if user.profile.course == "Hardware" %}
+                              <option value="Hardware" selected>Hardware</option>
+                              {% else %}
+                              <option value="Hardware">Hardware</option>
+                              {% endif %}
+                          </select>
+                            
                         </div>
                     </div>
                 </div><br><br>
                 <div class="form-group">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label> New Password</label>
-                            <input type="text" class="form-control" name="password" placeholder="Enter New Password" value="{{data.password}}">
-                        </div><br><br><br><br><br>
+                        
                         <div class="col-md-6">
                             <label>Gender</label>
                   
-                            <select name="gender"  class="form-control">
-                                <option value="Male">Male</option>
+                            <select name="gender" value="{{user.profile.gender}}" class="form-control">
+                                <option value="">Select a Gender</option>
 
-                                {% if data.gender == "Female" %}
+                                {% if user.profile.gender == "Male" %}
+                                <option value="Male" selected>Male</option>
+                                {% else %}
+                                <option value="Male">Male</option>
+                                {% endif %}
+                                
+                                {% if user.profile.gender == "Female" %}
                                 <option value="Female" selected>Female</option>
                                 {% else %}
                                 <option value="Female">Female</option>
                                 {% endif %}
 
-                                {% if data.gender == "Others" %}
+                                {% if user.profile.gender == "Others" %}
                                 <option value="Others" selected>Others</option>
                                 {% else %}
                                 <option value="Others">Others</option>
@@ -221,3 +243,155 @@
 </body>
 
 </html>
+
+
+ 
+
+
+{% comment %} {% extends "base.html" %} {% endcomment %}
+
+
+{% comment %} {% block style %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+  /* Add a hover animation to the Update button */
+  .animated-btn {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .animated-btn:hover {
+    background-color: #007bff; /* Change to your desired color */
+    color: #fff; /* Change to your desired color */
+  }
+
+  /* Set the body background color */
+  body {
+    background-color: orange; /* Change to your desired background color */
+  }
+</style>
+
+{% endblock style %}
+
+
+
+
+{% block body %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+     
+      <div class="card">
+        <div class="card-header">
+         
+          <h2 class="text-center">Update Profile</h2>
+        </div>
+        <div class="card-body">
+          {% for message in messages %}
+
+          <div class="alert alert-{{message.tags}}" role="alert">
+            <strong>{{message}}</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          
+          {% endfor %}
+          
+          <form id="update-profile-form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_first_name">First Name:</label>
+              <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+              <span id="first-name-error" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+              <label for="id_last_name">Last Name:</label>
+              <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
+              <span id="last-name-error" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+              <label for="id_email">Email:</label>
+              <input type="email" name="email" class="form-control" id="id_email" value="{{ user.email }}">
+              <span id="email-error" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+              <label>Contact Number</label>
+              <input type="text" value="{{data.contact}}" class="form-control" name="contact" placeholder="Enter Contact Number" pattern="[0-9]{10}" title="Number must contain 10 digits only!!">
+          </div>
+          <div class="form-group">
+            <div class="row">
+                
+                <div class="col-md-6">
+                    <label>Course</label>
+                    <select name="course" value="{{data.course}}" class="form-control">
+                      <option value="">Select a Course</option>
+
+                      {% if data.course == "Software" %}
+                      <option value="Software" selected>Software</option>
+                      {% else %}
+                      <option value="Software">Software</option>
+                      {% endif %}
+                      
+                      {% if data.course == "Cloud" %}
+                      <option value="Cloud" selected>Cloud</option>
+                      {% else %}
+                      <option value="Cloud">Cloud</option>
+                      {% endif %}
+
+                      {% if data.course == "Hardware" %}
+                      <option value="Hardware" selected>Hardware</option>
+                      {% else %}
+                      <option value="Hardware">Hardware</option>
+                      {% endif %}
+                  </select>
+                    
+                </div>
+            </div>
+        </div><br><br>
+        <div class="form-group">
+          <div class="row">
+              
+              <div class="col-md-6">
+                  <label>Gender</label>
+        
+                  <select name="gender" value="{{data.gender}}" class="form-control">
+                      <option value="">Select a Gender</option>
+
+                      {% if data.gender == "Male" %}
+                      <option value="Male" selected>Male</option>
+                      {% else %}
+                      <option value="Male">Male</option>
+                      {% endif %}
+                      
+                      {% if data.gender == "Female" %}
+                      <option value="Female" selected>Female</option>
+                      {% else %}
+                      <option value="Female">Female</option>
+                      {% endif %}
+
+                      {% if data.gender == "Others" %}
+                      <option value="Others" selected>Others</option>
+                      {% else %}
+                      <option value="Others">Others</option>
+                      {% endif %}
+                  </select>
+              </div>
+          </div>
+      </div>
+            
+            <button type="submit" class="btn btn-primary btn-block animated-btn">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock body %} {% endcomment %}
