@@ -152,50 +152,7 @@
             
         </div>
     </div>
-    
-    <h1 >ShareStudy Hub Admin Page </h1>
-    {% comment %} <h3> Welcome back,<span>{{request.user}}</span>  </h3> {% endcomment %}
-    <div class="content">
-        <table id="studentTable" style="display: none;">
-            <thead>
-                <tr>
-                    
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Option</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user_profile in user_profiles %}
-                    {% if user_profile.role == 'STUDENT' %}
-                        <tr>
-                            
-                            <td>{{ user_profile.first_name }}</td>
-                            <td>{{ user_profile.last_name }}</td>
-                            <td>{{ user_profile.username }}</td>
-                            <td>{{ user_profile.email }}</td>
-                            <td>{% if user_profile.is_active == 1 %}Active{% else %}Inactive{% endif %}</td>
-                            <td>
-                                {% if user_profile.is_active %}
-                                    <form method="post" action="{% url 'deactivate_user' user_profile.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit">Deactivate</button>
-                                    </form>
-                                {% else %}
-                                    <form method="post" action="{% url 'activate_user' user_profile.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit">Activate</button>
-                                    </form>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+   
         
         <table id="teacherTable" style="display: none;">
             <thead>

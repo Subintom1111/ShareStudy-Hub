@@ -10,6 +10,7 @@ from .models import Profile
 from .models import Profilete
 
 
+from django.db.models import Q
 #activate
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
@@ -59,7 +60,9 @@ def loginhome(request):
         return response
     else:
         return redirect('login')
-    
+
+
+
 @never_cache
 def index(request):
 
@@ -115,6 +118,8 @@ def signup(request):
             
 
 
+
+
 def signupteacher(request):
    if request.method=="POST":
             first_name=request.POST['first_name']
@@ -159,6 +164,9 @@ def signupteacher(request):
             return redirect('login')
    return render(request,'signupteacher.html')
 
+
+
+
    #Login Page  
 def login(request):
     
@@ -181,7 +189,7 @@ def login(request):
                return redirect('teacherhome')
             elif user.role=='ADMIN':
                
-               return redirect('custom_admin_page')
+               return redirect('adminnew')
                           
         else:
             messages.error(request,"Some thing went wrong")
@@ -190,9 +198,12 @@ def login(request):
     response['Cache-Control'] = 'no-store,must-revalidate'
     return response
 
+
+
 def signupteach(request):
             
    return render(request,'signupteach.html')
+
 
 
 
@@ -201,15 +212,20 @@ def teacherhome(request):
 
 
 
+
 def handlelogout(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('login')
 
+
+
+
 def edit_profile(request):
      return render(request,'edit_profile.html')
 
-     
+
+
 
 def adminreg(request):
     # Query all User objects (using the custom user model) from the database
@@ -221,6 +237,7 @@ def adminreg(request):
     
     # Render the HTML template
     return render(request, 'admin.html', context)
+
 
 
 
@@ -239,6 +256,8 @@ class ActivateAccountView(View):
             return redirect('login')
         return render(request,"activatefail.html")
     
+
+
 
 #student
 def edit_profile(request):
@@ -316,6 +335,8 @@ def edit_profile(request):
     else:
         return render(request, 'edit_profile.html', {'user': request.user})
       
+
+
 
 
 #teacher
@@ -396,6 +417,8 @@ def edit_profilete(request):
       
 
 
+
+
 #for admin
 def custom_admin_page(request):
      User = get_user_model()
@@ -406,45 +429,204 @@ def custom_admin_page(request):
 
 
 
+def adminnew(request):
+    return render(request,'adminnew.html')
+
+
+
+
+def userview(request):
+    role_filter = request.GET.get('role')
+    users = User.objects.filter(~Q(is_superuser=True))  # Exclude superusers by default
+
+    if role_filter:
+        users = users.filter(role=role_filter)
+
+    context = {'User_profiles': users, 'role_filter': role_filter}
+    return render(request,'userview.html',context)
+
+
+
+
+
+
+def teacherview(request):
+     return render(request,'teacherview.html')
 
 
 from django.core.mail import send_mail
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-from .models import User
 from django.template.loader import render_to_string
-def deactivate_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if user.is_active:
-        user.is_active = False
-        user.save()
-         # Send deactivation email
-        subject = 'Account Deactivation'
-        message = 'Your account has been deactivated by the admin.'
-        from_email = 'prxnv2832@gmail.com'  # Replace with your email
-        recipient_list = [user.email]
-        html_message = render_to_string('deactivation_email.html', {'user': user})
+from django.utils.html import strip_tags
 
-        send_mail(subject, message, from_email, recipient_list, html_message=html_message)
 
-        messages.success(request, f"User '{user.username}' has been deactivated, and an email has been sent.")
-    else:
-        messages.warning(request, f"User '{user.username}' is already deactivated.")
-    return redirect('custom_admin_page')
 
+
+
+  
 def activate_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if not user.is_active:
-        user.is_active = True
-        user.save()
-        subject = 'Account activated'
-        message = 'Your account has been activated.'
-        from_email = 'prxnv2832@gmail.com'  # Replace with your email
-        recipient_list = [user.email]
-        html_message = render_to_string('activation_email.html', {'user': user})
+    user = User.objects.get(id=user_id)
+    user.is_active = True
+    user.save()
+    subject = 'Account Activation'
+    html_message = render_to_string('activation_email.html', {'user': user})
+    plain_message = strip_tags(html_message)
+    from_email = 'prxnv2832@gmail.com'
+    recipient_list = [user.email]
+    send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+    return redirect('userview')
 
-        send_mail(subject, message, from_email, recipient_list, html_message=html_message)
-    else:
-        messages.warning(request, f"User '{user.username}' is already active.")
-    return redirect('custom_admin_page')
+def deactivate_user(request, user_id):
+    user = User.objects.get(id=user_id)
+    if user.is_superuser:
+        return HttpResponse("You cannot deactivate the admin.")
+    user.is_active = False
+    user.save()
+    subject = 'Account Deactivation'
+    html_message = render_to_string('deactivation_email.html', {'user': user})
+    plain_message = strip_tags(html_message)
+    from_email = 'prxnv2832@gmail.com'
+    recipient_list = [user.email]
+    send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+    # Send an email to the user here
+    return redirect('userview')
+
+#################################################################################
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .models import User, Course  
+
+def add_course(request):
+    if request.method == "POST":
+        course_name = request.POST.get("course_name")
+        assigned_teacher_id = request.POST.get("assigned_teacher")
+
+        if course_name and assigned_teacher_id:
+            
+            try:
+                assigned_teacher = User.objects.get(id=assigned_teacher_id)  # Replace 'User' with your user model
+
+                # Create a new course object and save it to the database
+                course = Course(course_name=course_name, assigned_teachers=assigned_teacher)
+                course.save()
+
+                # Redirect to a success page or any other appropriate URL
+                return redirect('add_course')  # Replace 'add_course' with your desired URL name
+            except User.DoesNotExist:
+                return HttpResponse("Selected teacher does not exist.", status=400)
+            except Exception as e:
+                # Log the error
+                print(e)
+                return HttpResponse("An error occurred while saving the course.", status=500)
+        else:
+            return HttpResponse("Invalid form data.", status=400)
+
+    # Fetch a list of teachers from the User model with the 'TEACHER' role
+    teachers = User.objects.filter(role='TEACHER')  # Adjust 'role' and 'User' as per your user model
+
+    return render(request, 'add_course.html', {'teachers': teachers})
+
+###################################################################################
+
+def exammarkset(request):
+     return render(request,'exammarkset.html')
+
+
+def examdetails(request):
+     return render(request,'examdetails.html')
+
+
+
+##########################################################################
+
+
+def view_course(request):
+    courses = Course.objects.all()  # Retrieve all courses
+    return render(request, 'view_course.html', {'courses': courses})
+
+
+
+
+def delete_course(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+        course.delete()
+    except Course.DoesNotExist:
+        
+        pass 
+
+    return redirect('view_course')  
+
+
+#################################################################################
+
+
+from django.shortcuts import render, redirect
+from .models import Feedback
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def submit_feedback(request):
+    if request.method == "POST":
+        feedback_message = request.POST.get('feedback_message')
+        if feedback_message:
+            Feedback.objects.create(student=request.user, message=feedback_message)
+            # You can add additional logic here (e.g., sending a confirmation email)
+            return redirect('feedback_thankyou')
+
+    return render(request, 'feedback_form.html')
+
+
+def feedback_thankyou(request):
+     return render(request,'feedback_thankyou.html')
+
+
+from django.shortcuts import render
+from .models import Feedback
+
+def adminfeedback(request):
+    feedback_list = Feedback.objects.all()
+    return render(request, 'adminfeedback.html', {'feedback_list': feedback_list})
+
+
+#######################################################################################
+
+
+from django.shortcuts import render, redirect
+from .models import ExamMark
+
+def exammarkset(request):
+    if request.method == "POST":
+        course_name = request.POST.get('course_name')
+        question_number = request.POST.get('question_number')
+        total_marks = request.POST.get('total_marks')
+        exam_time = request.POST.get('exam_time')
+        
+        print(f"course_name: {course_name}")
+        print(f"question_number: {question_number}")
+        print(f"total_marks: {total_marks}")
+        print(f"exam_time: {exam_time}")
+
+        if course_name and question_number and total_marks and exam_time:
+            exam = ExamMark(
+                course_name=course_name,
+                question_number=question_number,
+                total_marks=total_marks,
+                exam_time=exam_time
+            )
+            exam.save()
+            print("Data saved to the database")
+        else:
+            print("Some fields are missing")
+    return render(request, 'exammarkset.html')
+
+##############################################################################
+
+def select_course(request):
+    if request.method == "POST":
+        selected_course_id = request.POST.get("selected_course")
+        # Handle the selected course ID, e.g., save it to the student's profile
+        # and implement the course request logic
+
+    courses = Course.objects.filter(is_approved=True)  # Fetch only approved courses
+    return render(request, "select_course.html", {"courses": courses})

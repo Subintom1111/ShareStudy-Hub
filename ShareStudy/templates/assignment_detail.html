@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment Details</title>
+</head>
+<body>
+    <h1>Assignment Details</h1>
+    
+    <h2>Title: {{ assignment.title }}</h2>
+    <p>Teacher: {{ assignment.teacher.username }}</p>
+    <p>Deadline: {{ assignment.deadline|date:"F j, Y, H:i" }}</p>
+    
+    <h3>Description</h3>
+    <p>{{ assignment.description }}</p>
+
+    <a href="{% url 'assignment_list' %}">Back to Assignment List</a>
+</body>
+</html>

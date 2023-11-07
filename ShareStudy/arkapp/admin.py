@@ -10,6 +10,10 @@ from .models import *
 
 admin.site.register(User),
 admin.site.register(Profile),
+admin.site.register(Profilete),
+admin.site.register(Course),
+admin.site.register(Feedback),
+admin.site.register(ExamMark),
 
 
 
