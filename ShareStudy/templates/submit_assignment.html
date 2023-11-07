@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Submit Assignment</title>
-    <!-- Add your styles and scripts as needed -->
+    <title>Assignment Submitted</title>
 </head>
 <body>
-    <h1>Submit Assignment</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="assignment" accept=".pdf, .doc, .docx">
-        <br>
-        <button type="submit">Submit Assignment</button>
-    </form>
+    <h1>Assignment Submitted Successfully</h1>
+    <p>Your assignment has been successfully uploaded. Thank you for your submission.</p>
+    <a href="{% url 'assignstu_list' %}">Back to Assignment List</a>
 </body>
 </html>

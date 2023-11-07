@@ -57,8 +57,7 @@
                 <th>Title</th>
                 <th>Teacher</th>
                 <th>Deadline</th>
-                <th>Action</th>
-                <th>Submissions</th>  <!-- New column for submissions -->
+                <th>Upload File</th>
             </tr>
         </thead>
         <tbody>
@@ -68,23 +67,21 @@
                 <td>{{ assignment.teacher.first_name }}</td>
                 <td>{{ assignment.deadline|date:"F j, Y, H:i" }}</td>
                 <td>
-                    <a href="{% url 'assignment_detail' assignment.id %}">View</a> |
-                    <a href="{% url 'update_assignment' assignment.id %}">Edit</a> |
-                    <a href="{% url 'delete_assignment' assignment.id %}">Delete</a>
-                </td>
-                <td>
-                    <!-- Link to view student names -->
-                    <a href="{% url 'view_student_names' assignment.id %}">View Student Names</a>
+                    <form method="post" action="{% url 'submit_assignment' assignment.id %}">
+
+                        {% csrf_token %}
+                        <input type="file" name="file" accept=".pdf,.doc,.docx" required>
+                        <button type="submit">Upload</button>
+                    </form>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">No assignments available.</td>
+                <td colspan="4">No assignments available.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <center><br><br>
-    <a href="{% url 'create_assignment' %}">Create Assignment</a></center>
+    
 </body>
 </html>

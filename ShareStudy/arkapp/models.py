@@ -81,3 +81,17 @@ class ExamMark(models.Model):
     question_number = models.IntegerField()
     total_marks = models.IntegerField()
     exam_time = models.CharField(max_length=20)  # Add the exam_time field
+
+
+class Assignment(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    deadline = models.DateTimeField()
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Submission(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the student who made the submission
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)  # Link to the assignment
+    submitted_at = models.DateTimeField(auto_now_add=True)  # Timestamp for when the submission was made
+    document = models.FileField(upload_to='submissions/')  # Upload a file as the submission

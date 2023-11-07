@@ -14,8 +14,8 @@ admin.site.register(Profilete),
 admin.site.register(Course),
 admin.site.register(Feedback),
 admin.site.register(ExamMark),
-
-
+admin.site.register(Assignment),
+admin.site.register(Submission),
 
 
 

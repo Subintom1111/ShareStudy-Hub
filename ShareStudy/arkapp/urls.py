@@ -35,7 +35,15 @@ urlpatterns = [
     path('feedback_thankyou/', views.feedback_thankyou, name='feedback_thankyou'), 
     path("adminfeedback",views.adminfeedback,name='adminfeedback'),
     path('exammarkset/', views.exammarkset, name='exammarkset'),
-    path('select_course/', views.select_course, name='select_course'),
-    
+    path('assignment_list', views.assignment_list, name='assignment_list'),
+    path('<int:assignment_id>/', views.assignment_detail, name='assignment_detail'),
+    path('create/', views.create_assignment, name='create_assignment'),
+    path('update/<int:assignment_id>/', views.update_assignment, name='update_assignment'),
+    path('delete/<int:assignment_id>/', views.delete_assignment, name='delete_assignment'),
+    path('assignstu_list', views.assignstu_list, name='assignstu_list'),
+    path('submit_assignment/<int:assignment_id>/', views.submit_assignment, name='submit_assignment'),
+    path('view_student_names/<int:assignment_id>/', views.view_student_names, name='view_student_names'),
+
+
     
 ]

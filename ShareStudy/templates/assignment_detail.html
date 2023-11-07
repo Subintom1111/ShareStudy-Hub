@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Assignment Details</title>
+    <title>Assignment Detail</title>
 </head>
 <body>
-    <h1>Assignment Details</h1>
+    <h1>Assignment Detail</h1>
     
     <h2>Title: {{ assignment.title }}</h2>
-    <p>Teacher: {{ assignment.teacher.username }}</p>
+    <p>Description: {{ assignment.description }}</p>
     <p>Deadline: {{ assignment.deadline|date:"F j, Y, H:i" }}</p>
-    
-    <h3>Description</h3>
-    <p>{{ assignment.description }}</p>
+
+    <h2>Submissions:</h2>
+    <ul>
+        {% for submission in submissions %}
+            <li><a href="{% url 'submission_detail' submission.id %}">{{ submission.student.username }}</a></li>
+        {% endfor %}
+    </ul>
 
     <a href="{% url 'assignment_list' %}">Back to Assignment List</a>
 </body>

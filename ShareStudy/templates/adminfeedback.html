@@ -64,7 +64,7 @@
         <tbody>
             {% for feedback in feedback_list %}
                 <tr>
-                    <td>{{ feedback.student }}</td>
+                    <td>{{ feedback.student.first_name }}</td>
                     <td>{{ feedback.message }}</td>
                     <td>{{ feedback.timestamp }}</td>
                 </tr>

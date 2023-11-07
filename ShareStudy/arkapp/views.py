@@ -620,13 +620,96 @@ def exammarkset(request):
             print("Some fields are missing")
     return render(request, 'exammarkset.html')
 
-##############################################################################
+#####################################################################################
 
-def select_course(request):
-    if request.method == "POST":
-        selected_course_id = request.POST.get("selected_course")
-        # Handle the selected course ID, e.g., save it to the student's profile
-        # and implement the course request logic
 
-    courses = Course.objects.filter(is_approved=True)  # Fetch only approved courses
-    return render(request, "select_course.html", {"courses": courses})
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Assignment,Submission
+
+def assignment_list(request):
+    assignments = Assignment.objects.all()
+    return render(request, 'assignment_list.html', {'assignments': assignments})
+
+def assignment_detail(request, assignment_id):
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+    submissions = Submission.objects.filter(assignment=assignment)
+    return render(request, 'assignment_detail.html', {'assignment': assignment})
+
+def create_assignment(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        deadline = request.POST.get('deadline')
+        teacher = request.user  # Assign the current teacher as the creator
+
+        Assignment.objects.create(
+            title=title,
+            description=description,
+            deadline=deadline,
+            teacher=teacher,
+        )
+
+        return redirect('assignment_list')
+
+    return render(request, 'create_assignment.html')
+
+def update_assignment(request, assignment_id):
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        deadline = request.POST.get('deadline')
+
+        assignment.title = title
+        assignment.description = description
+        assignment.deadline = deadline
+        assignment.save()
+
+        return redirect('assignment_list')
+
+    return render(request, 'update_assignment.html', {'assignment': assignment})
+
+def delete_assignment(request, assignment_id):
+    assignment = Assignment.objects.get(pk=assignment_id)
+    assignment.delete()
+    return redirect('assignment_list')
+
+
+def assignstu_list(request):
+    assignments = Assignment.objects.all()
+    return render(request, 'assignstu_list.html', {'assignments': assignments})
+
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Assignment
+from .models import Submission
+
+def submit_assignment(request, assignment_id):
+    assignment = get_object_or_404(Assignment, pk=assignment_id)
+
+    if request.method == 'POST' and 'file' in request.FILES:
+        uploaded_file = request.FILES['file']
+
+        # Create a new submission
+        submission = Submission.objects.create(
+            student=request.user,
+            assignment=assignment,
+            document=uploaded_file
+        )
+
+        # Redirect to a different view (e.g., student_assignment_list)
+        return redirect('submit_assignment')
+
+    return render(request, 'submit_assignment.html', {'assignment': assignment})
+
+
+
+def view_student_names(request, assignment_id):
+    submissions = Submission.objects.filter(assignment_id=assignment_id)
+    # You can pass the list of students to the template
+    students = [submission.student for submission in submissions]
+
+    return render(request, 'view_student_names.html', {'students': students})
