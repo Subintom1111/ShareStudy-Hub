@@ -44,14 +44,14 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="index.html">ShareStudy Hub</a></h1>
+      <h1 class="logo me-auto"><a href="/loginhome">ShareStudy Hub</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="{%static '{% static 'assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a class="nav-link" href="loginhome">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
+          {% comment %} <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Examination</a></li>
               <li><a href="#">Exam Certificate</a></li>
@@ -60,36 +60,92 @@
               
             </ul>
           </li>
-          <li><a href="events.html">Notes</a></li>
+          <li><a href="events.html">Notes</a></li> {% endcomment %}
           <li><a href="{% url 'assignstu_list' %}">Assignments</a></li>
-          <li><a href="contact.html">Online Class </a></li>
+          <li><a href="{% url 'view_course_notes' %}">Course Materials</a></li>
+           <!-- your_template.html -->
+          <li><a href="{% url 'view_notifications' %}"><i class="fa fa-bell"></i> Notification</a></li>
           <li><a href="{% url 'submit_feedback' %}">Feedback</a></li>
           <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
-          <li><a class="nav-link" href="{% url 'handlelogout' %}" id="logout-link">Logout</a></li>
-          <li>
+          <li><a class="nav-link" href="{% url 'handlelogout' %}" id="logout-link">Logout</a></li><br>
+          <li><li>
             {% if user.is_authenticated %}
-                <li><h6 class="font-weight-bold">Welcome {{ user.first_name }}</h6></li>
+                <li><h6 class="font-weight-bold" style="color: black;">Welcome, {{ user.first_name }}</h6></li>
             {% else %}
-                <li><h6 class="font-weight-bold">Welcome, Please Log in</h6></li>
+                <li><h6 class="font-weight-bold" style="color: black;">Welcome, Please Log in</h6></li>
             {% endif %}
-          </li>
+        </li></li>
+        
         
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-
+      
     </div>
   </header><!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex justify-content-center align-items-center">
-    <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
-      <h1>Learning Today,<br>Leading Tomorrow</h1>
-      <h2>Education is the key to unlocking one's potential and shaping a brighter future.</h2>
-      <a href="courses.html" class="btn-get-started">Get Started</a>
-    </div>
-  </section><!-- End Hero -->
+  <!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+    <!-- ... (your existing head content) ... -->
+    <style>
+      body {
+        position: relative;
+        background: url("{% static 'assets/img/1.jpg' %}") center center fixed;
+        background-size: cover;
+        color: #fff;
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+  
+      h1.custom-text {
+        margin-top: 500px; /* Adjust the margin-top for the desired position */
+        margin-left: 50vw; /* Use viewport units for horizontal centering */
+        transform: translateY(20px); /* Initial position below the frame */
+        color: linear-gradient(to right, #ff4e50, #fc913a, #f9d423, #ede574, #e1f5c4); /* Multicolor gradient */
+       -webkit-background-clip: text; /* Apply gradient only to the text */
+        opacity: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 5em; /* Use a suitable font-size */
+        animation: fadeInAndSlide 2s ease forwards;
+      }
+
+      h3.custom-text {
+        margin-top: 400px; /* Adjust the margin-top for the desired position */
+        margin-left: 50vw; /* Use viewport units for horizontal centering */
+        transform: translateY(20px); /* Initial position below the frame */
+        color: linear-gradient(to right, #ff4e50, #fc913a, #f9d423, #ede574, #e1f5c4); /* Multicolor gradient */
+       -webkit-background-clip: text; /* Apply gradient only to the text */
+        opacity: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1em; /* Use a suitable font-size */
+        animation: fadeInAndSlide 2s ease forwards;
+      }
+  
+      @keyframes fadeInAndSlide {
+        to {
+          opacity: 1;
+          transform: translateY(0); /* Final position at the top */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+  
+    <!-- Text with animation -->
+    <h1 class="custom-text" style="margin-top: 250px; margin-left: 100px; color: white;">Learning Today,<br>Leading Tomorrow</h1>
+    <h3 class="custom-text" style="margin-top: 0px; margin-left: 110px; color: white;">"Education unlocks doors to a world of possibilities."</h3>
+    <h3 class="custom-text" style="margin-top: 150px; margin-left: 110px; color: white;"></h3>
+    <!-- ... (your existing body content) ... -->
+    
+  
+  </body>
+  
+  </html>
 
   <main id="main">
 
@@ -164,7 +220,7 @@
           <!-- You can delete the links only if you purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+          Designed by <a href="https://bootstrapmade.com/">Tom</a>
         </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">

@@ -5,19 +5,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-GENDER_CHOICES = (
-    ("MALE", "Male"),
-    ("FEMALE", "Female"),
-    ("OTHER", "Other"),
-) 
-
-
-COURSE_CHOICES = (
-        ("course1", "Course 1"),
-        ("course2", "Course 2"),
-        ("course3", "Course 3"),
-        # Add more course options as needed
-    )
 
 
 class User(AbstractUser):
@@ -34,19 +21,14 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=12, unique=True)  # You can adjust the max_length as needed
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES) 
-
-    course = models.CharField(max_length=10, choices=COURSE_CHOICES)
-
+    
 
 
 
 class Profilete(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=12, unique=True)  # You can adjust the max_length as needed
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES) 
-
-    course = models.CharField(max_length=10, choices=COURSE_CHOICES)
+   
 
     def _str_(self):
         return self.user.username
@@ -57,9 +39,17 @@ class Profilete(models.Model):
 
 from django.db import models
 
-class Course(models.Model):
-    course_name = models.CharField(max_length=100)
-    assigned_teachers = models.CharField(max_length=200)
+class Courses(models.Model):
+    course_name = models.CharField(max_length=255)
+    description = models.TextField()
+    assigned_teachers = models.CharField(max_length=255)
+    credit_hours = models.PositiveIntegerField()
+    course_fee = models.DecimalField(max_digits=8, decimal_places=2)
+    available_seats = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.course_name
+
 
 
 
@@ -95,3 +85,27 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)  # Link to the assignment
     submitted_at = models.DateTimeField(auto_now_add=True)  # Timestamp for when the submission was made
     document = models.FileField(upload_to='submissions/')  # Upload a file as the submission
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.message
+    
+
+class CourseNotes(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    upload_date = models.DateTimeField(auto_now_add=True)
+    pdf_file = models.FileField(upload_to='course_notes/')
+    
+    
+
+    def __str__(self):
+        return self.title
+    
+    

@@ -2,7 +2,12 @@
 from django.urls import path,include
 from arkapp import views
 from . import views
+from .views import stu_sidecourse
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
+from .views import send_notification,view_notifications,admin_notifications
+from .views import upload_course_notes, download_course_notes,view_course_notes
+
+
 urlpatterns = [
     
     path("signup/",views.signup,name="signup"),
@@ -43,7 +48,16 @@ urlpatterns = [
     path('assignstu_list', views.assignstu_list, name='assignstu_list'),
     path('submit_assignment/<int:assignment_id>/', views.submit_assignment, name='submit_assignment'),
     path('view_student_names/<int:assignment_id>/', views.view_student_names, name='view_student_names'),
+    path('list_submissions/', views.list_submissions, name='list_submissions'),
 
-
+    # URL for teachers to download assignments (accessible to teachers)
+    path('download_assignment/<int:submission_id>/', views.download_assignment, name='download_assignment'),
+    path('course/<int:course_id>/', stu_sidecourse, name='stu_sidecourse'),
+    path('send_notification', send_notification, name='send_notification'),
+    path('view_notifications/', view_notifications, name='view_notifications'),
+    path('admin_notifications', admin_notifications, name='admin_notifications'),
+    path('upload_course_notes', upload_course_notes, name='upload_course_notes'),
+    path('view_course_notes/', view_course_notes, name='view_course_notes'),  # Add this line
+    path('download/<int:notes_id>/', download_course_notes, name='download_course_notes'),
     
 ]

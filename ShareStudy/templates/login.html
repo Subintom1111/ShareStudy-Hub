@@ -21,21 +21,62 @@ ShareStudy Hub
             background-repeat: no-repeat;
         }
 
-        h2 {
-            margin-top: 50px; /* Adjust the margin as needed */
+        h6.custom-text {
+            margin-top: 30px; /* Adjust the margin as needed */
             text-align: center;
-            color: #333;
-        }
-
-        form {
-            max-width: 400px;
+            color: #fff; /* A blue color, you can change this */
+            font-size: 3em; /* Use a suitable font-size */
+            font-family: 'Verdana', sans-serif; /* Change the font-family if needed */
+            animation: fadeInAndColorChange 2s ease forwards;
+          }
+          
+          @keyframes fadeInAndColorChange {
+            to {
+              opacity: 1;
+              color: #fff; /* Change to white when animation completes */
+            }
+          }
+          
+        
+          form {
+            max-width: 350px;
             margin: 0 auto;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 15px;
             text-align: center;
-        }
+          }
+          
+          form input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #3498db;
+            border-radius: 8px;
+          }
+          
+          form button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+          }
+          
+          form button:hover {
+            background-color: #27ae60;
+          }
+          
+          
+          
+          
 
         label {
             display: block;
@@ -84,7 +125,7 @@ ShareStudy Hub
       {% endfor %}
 
 
-    <h2>Login</h2><br>
+    <h6 class="custom-text" style="margin-top: 40px; margin-left: 10px;">Login</h6><br>
     <form id="login-form" method="post">
         {% csrf_token %}
       <div class="form-group">

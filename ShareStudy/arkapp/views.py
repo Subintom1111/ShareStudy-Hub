@@ -19,7 +19,7 @@ from .models import User
 from django.contrib.auth import authenticate, login,logout
 from django.utils.encoding import DjangoUnicodeDecodeError
 import re
-
+from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 #from .utils import *
 
@@ -206,8 +206,10 @@ def signupteach(request):
 
 
 
-
+@never_cache
+@login_required(login_url="login")
 def teacherhome(request):
+     
      return render(request,'teacherhome.html')
 
 
@@ -260,6 +262,8 @@ class ActivateAccountView(View):
 
 
 #student
+@never_cache
+@login_required(login_url="login")
 def edit_profile(request):
     if request.method == 'POST':
         # Process the form data and update the user's profile
@@ -340,6 +344,8 @@ def edit_profile(request):
 
 
 #teacher
+@never_cache
+@login_required(login_url="login")
 def edit_profilete(request):
     if request.method == 'POST':
         # Process the form data and update the user's profile
@@ -428,7 +434,8 @@ def custom_admin_page(request):
        
 
 
-
+@never_cache
+@login_required(login_url="login")
 def adminnew(request):
     return render(request,'adminnew.html')
 
@@ -492,32 +499,38 @@ def deactivate_user(request, user_id):
 
 #################################################################################
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import User, Course  
+from .models import Courses
 
 def add_course(request):
     if request.method == "POST":
         course_name = request.POST.get("course_name")
+        description = request.POST.get("description")
         assigned_teacher_id = request.POST.get("assigned_teacher")
+        credit_hours = request.POST.get("credit_hours")
+        course_fee = request.POST.get("course_fee")
+        available_seats = request.POST.get("available_seats")
 
-        if course_name and assigned_teacher_id:
-            
+        if course_name and assigned_teacher_id and credit_hours and course_fee and available_seats:
             try:
-                assigned_teacher = User.objects.get(id=assigned_teacher_id)  # Replace 'User' with your user model
-
-                # Create a new course object and save it to the database
-                course = Course(course_name=course_name, assigned_teachers=assigned_teacher)
-                course.save()
-
-                # Redirect to a success page or any other appropriate URL
-                return redirect('add_course')  # Replace 'add_course' with your desired URL name
+                assigned_teachers= get_object_or_404(User, id=assigned_teacher_id)
             except User.DoesNotExist:
                 return HttpResponse("Selected teacher does not exist.", status=400)
-            except Exception as e:
-                # Log the error
-                print(e)
-                return HttpResponse("An error occurred while saving the course.", status=500)
+
+            # Create a new course object and save it to the database
+            course = Courses(
+                course_name=course_name,
+                description=description,
+                assigned_teachers=assigned_teachers.username,  # Assuming you want to store the username of the teacher
+                credit_hours=credit_hours,
+                course_fee=course_fee,
+                available_seats=available_seats
+            )
+            course.save()
+
+            # Redirect to a success page or any other appropriate URL
+            return redirect('add_course')  # Replace 'add_course' with your desired URL name
         else:
             return HttpResponse("Invalid form data.", status=400)
 
@@ -525,6 +538,7 @@ def add_course(request):
     teachers = User.objects.filter(role='TEACHER')  # Adjust 'role' and 'User' as per your user model
 
     return render(request, 'add_course.html', {'teachers': teachers})
+
 
 ###################################################################################
 
@@ -541,7 +555,7 @@ def examdetails(request):
 
 
 def view_course(request):
-    courses = Course.objects.all()  # Retrieve all courses
+    courses = Courses.objects.all()  # Retrieve all courses
     return render(request, 'view_course.html', {'courses': courses})
 
 
@@ -549,9 +563,9 @@ def view_course(request):
 
 def delete_course(request, course_id):
     try:
-        course = Course.objects.get(id=course_id)
+        course = Courses.objects.get(id=course_id)
         course.delete()
-    except Course.DoesNotExist:
+    except Courses.DoesNotExist:
         
         pass 
 
@@ -565,7 +579,8 @@ from django.shortcuts import render, redirect
 from .models import Feedback
 from django.contrib.auth.decorators import login_required
 
-@login_required
+@never_cache
+@login_required(login_url="login")
 def submit_feedback(request):
     if request.method == "POST":
         feedback_message = request.POST.get('feedback_message')
@@ -626,6 +641,8 @@ def exammarkset(request):
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Assignment,Submission
 
+@never_cache
+@login_required(login_url="login")
 def assignment_list(request):
     assignments = Assignment.objects.all()
     return render(request, 'assignment_list.html', {'assignments': assignments})
@@ -633,7 +650,7 @@ def assignment_list(request):
 def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, pk=assignment_id)
     submissions = Submission.objects.filter(assignment=assignment)
-    return render(request, 'assignment_detail.html', {'assignment': assignment})
+    return render(request, 'assignment_detail.html', {'assignment': assignment,'submissions':submissions})
 
 def create_assignment(request):
     if request.method == 'POST':
@@ -676,7 +693,10 @@ def delete_assignment(request, assignment_id):
     return redirect('assignment_list')
 
 
+@never_cache
+@login_required(login_url="login")
 def assignstu_list(request):
+    
     assignments = Assignment.objects.all()
     return render(request, 'assignstu_list.html', {'assignments': assignments})
 
@@ -684,8 +704,7 @@ def assignstu_list(request):
 
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Assignment
-from .models import Submission
+from .models import Assignment, Submission
 
 def submit_assignment(request, assignment_id):
     assignment = get_object_or_404(Assignment, pk=assignment_id)
@@ -699,11 +718,15 @@ def submit_assignment(request, assignment_id):
             assignment=assignment,
             document=uploaded_file
         )
+        
+        # Save the submission to the database
+        submission.save()
 
         # Redirect to a different view (e.g., student_assignment_list)
-        return redirect('submit_assignment')
+        return redirect('assignstu_list')  # Replace with the correct view name
 
     return render(request, 'submit_assignment.html', {'assignment': assignment})
+
 
 
 
@@ -713,3 +736,102 @@ def view_student_names(request, assignment_id):
     students = [submission.student for submission in submissions]
 
     return render(request, 'view_student_names.html', {'students': students})
+
+
+def list_submissions(request):
+    # Implement a view for teachers to list submissions
+    submissions = Submission.objects.all()
+    return render(request, 'list_submissions.html', {'submissions': submissions})
+
+def download_assignment(request, submission_id):
+    # Implement a view for teachers to download assignments
+    submission = get_object_or_404(Submission, id=submission_id)
+    # Implement code to serve the file for download
+    response = HttpResponse(submission.document, content_type='application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename="{submission.document.name}"'
+    return response
+
+
+################################################################################################
+
+
+
+def stu_sidecourse(request, course_id):
+    # Retrieve the course details based on the course_id
+    course = get_object_or_404(Courses, id=course_id)
+    
+    # Render the template with the course details
+    return render(request, 'stu_sidecourse.html', {'course': course})
+
+
+############################################################################################
+
+
+from .models import Notification
+def send_notification(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        users = User.objects.all()
+
+        # Create a notification for each user
+        for user in users:
+            Notification.objects.create(user=user, message=message)
+
+        return redirect('send_notification')  # Redirect to admin dashboard or any desired page
+
+    return render(request, 'send_notification.html')
+
+
+def view_notifications(request):
+    # Retrieve notifications for the logged-in student
+    notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')
+
+    # Mark notifications as read
+    notifications.update(is_read=True)
+
+    return render(request, 'view_notifications.html', {'notifications': notifications})
+
+def admin_notifications(request):
+    
+        notifications = Notification.objects.all().order_by('-timestamp')
+
+        if request.method == 'POST':
+            # Handle notification deletion
+            notification_id = request.POST.get('delete_notification')
+            if notification_id:
+                Notification.objects.filter(id=notification_id).delete()
+                return redirect('admin_notifications')
+
+        return render(request, 'admin_notifications.html', {'notifications': notifications})
+
+#######################################################################################################
+
+from .models import CourseNotes, User
+
+def upload_course_notes(request):
+    if request.method == 'POST':
+    
+        title = request.POST['title']
+        description = request.POST['description']
+        pdf_file = request.FILES['pdf_file']
+        
+        # Assuming you have a User model with a 'username' field
+        # You may need to adjust this depending on your actual models
+        
+        
+        course_notes = CourseNotes( title=title, description=description, pdf_file=pdf_file)
+        course_notes.save()
+    return render(request, 'upload_course_notes.html')
+
+def download_course_notes(request, notes_id):
+    course_notes = get_object_or_404(CourseNotes, pk=notes_id)
+    file_path = course_notes.pdf_file.path
+    with open(file_path, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{course_notes.pdf_file.name}"'
+        return response
+
+def view_course_notes(request):
+    course_notes = CourseNotes.objects.all()
+    return render(request, 'view_course_notes.html', {'course_notes': course_notes})
+

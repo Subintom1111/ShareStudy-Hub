@@ -99,7 +99,7 @@
                         <!--logo-->
                         <a href="http://127.0.0.1:8000/adminnew">
                             <!--<img class="img-fluid" src="{% static 'assets/img/logo2.jpg' %}" alt="Theme-Logo" />-->
-                            <h5>Admin Dashboard</h5>
+                            <h5>ShareStudy Hub</h5>
                         </a>
 
 
@@ -132,7 +132,7 @@
                                         <h6>Notifications</h6>
                                         <label class="label label-danger">New</label>
                                     </li>
-                                    <li>
+                                    {% comment %} <li>
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="{% static 'assetsss/images/avatar-4.jpg' %}" alt="Generic placeholder image">
                                             <div class="media-body">
@@ -141,8 +141,8 @@
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
+                                    </li> {% endcomment %}
+                                    {% comment %} <li>
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="{% static 'assetsss/images/avatar-3.jpg' %}" alt="Generic placeholder image">
                                             <div class="media-body">
@@ -151,8 +151,8 @@
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
+                                    </li> {% endcomment %}
+                                    {% comment %} <li>
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="{% static 'assetsss/images/avatar-4.jpg' %}" alt="Generic placeholder image">
                                             <div class="media-body">
@@ -161,7 +161,7 @@
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> {% endcomment %}
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
@@ -171,7 +171,7 @@
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
-                                    <li>
+                                    {% comment %} <li>
                                         <a href="#!">
                                             <i class="ti-settings"></i> Settings
                                         </a>
@@ -190,9 +190,9 @@
                                         <a href="#">
                                             <i class="ti-lock"></i> Lock Screen
                                         </a>
-                                    </li>
+                                    </li> {% endcomment %}
                                     <li>
-                                        <a href="/myauth/logout/">
+                                        <a href="{% url 'handlelogout' %}" id="logout-link">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -219,9 +219,9 @@
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="#"><i class="ti-user"></i>View Profile</a>
-                                            <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            {% comment %} <a href="#"><i class="ti-user"></i>View Profile</a>
+                                            <a href="#!"><i class="ti-settings"></i>Settings</a> {% endcomment %}
+                                            <a href="{% url 'handlelogout' %}"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -329,7 +329,7 @@
                                 
                             </ul>
 
-                            <div class="pcoded-navigatio-lavel" data-i18n="nav.category.forms">Feedback &amp; Maps</div>
+                            <div class="pcoded-navigatio-lavel" data-i18n="nav.category.forms">Feedback &amp; Exam</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li>
                                     <a href="http://127.0.0.1:8000/adminfeedback">
@@ -338,17 +338,34 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="map-google.html">
-                                        <span class="pcoded-micon"><i class="ti-layers"></i><b>FC</b></span>
-                                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Maps</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
-                                        <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">Knowledge Exam</span>
+                                        <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">Notification</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" ">
+                                            <a href="http://127.0.0.1:8000/send_notification">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Send Notification </span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="http://127.0.0.1:8000/admin_notifications">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext" data-i18n="nav.basic-components.breadcrumbs">View Notification</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+                                        <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">Aptitude Exam</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">

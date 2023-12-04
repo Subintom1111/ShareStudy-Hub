@@ -44,14 +44,14 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="index.html">ShareStudy Hub</a></h1>
+      <h1 class="logo me-auto"><a href="http://127.0.0.1:8000/teacherhome/">ShareStudy Hub</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="{%static '{% static 'assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
-          <li><a class="active" href="index.html">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
+          <li><a class="active" href="http://127.0.0.1:8000/teacherhome/">Home</a></li>
+          {% comment %} <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Examination</a></li>
                 
@@ -59,12 +59,19 @@
               
             </ul>
           </li>
-          <li><a href="events.html"> Upload Notes</a></li>
-          <li><a href="contact.html">Assignment Qns</a></li>
-          <li><a href="contact.html">Online Class </a></li>
-          <li><a href="{% url 'edit_profilete' %}">Edit Profile </a></li>
-          <li><a href="login.html">Logout</a></li>
- 
+          <li><a href="events.html"> Upload Notes</a></li> {% endcomment %}
+          <li><a href="http://127.0.0.1:8000/assignment_list">Assignment Qns</a></li>
+          {% comment %} <li><a href="contact.html">Online Class </a></li> {% endcomment %}
+          <li><a href="http://127.0.0.1:8000/edit_profilete/">Edit Profile </a></li>
+          <li><a class="nav-link" href="{% url 'handlelogout' %}" id="logout-link">Logout</a></li><br>
+          <li><li>
+            {% if user.is_authenticated %}
+                <li><h6 class="font-weight-bold">Welcome ,{{ user.first_name }}</h6></li>
+            {% else %}
+                <li><h6 class="font-weight-bold">Welcome, Please Log in</h6></li>
+            {% endif %}
+          </li></li>
+          
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -102,7 +109,7 @@
                     <div class="alert alert-primary">{{status}}</div>
                 {% endif %}
                 <br><br>
-                <center><h3>Update Proflie</h3></center><br><br>
+                <center><h3>Update Profile</h3></center><br><br>
                 <div class="form-group">
                     <div class="row">
                         <div class="form-group">
@@ -115,8 +122,8 @@
                         <label for="id_last_name">Last Name:</label>
                         <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
                         <span id="last-name-error" class="text-danger"></span><br>
-                        </div>
-                        <br>
+                        </div><br><br>
+                        
                         <div class="col-md-6">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">

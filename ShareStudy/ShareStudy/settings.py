@@ -138,7 +138,7 @@ LOGOUT_REDIRECT_URL='login'
 #Session logout
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_NAME = "sessionid"
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 10000
 LOGIN_URL = 'login'
 
 

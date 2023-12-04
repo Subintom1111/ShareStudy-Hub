@@ -51,8 +51,8 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href=" http://127.0.0.1:8000/">Home</a></li>
-          <li><a href="courses.html">Courses</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          {% comment %} <li><a href="courses.html">Courses</a></li>
+          <li><a href="contact.html">Contact</a></li> {% endcomment %}
           <li class="dropdown"><a href="#"><span>Signup</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="signup/">Signup For Students</a></li>
@@ -68,128 +68,75 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-      <a href="courses.html" class="get-started-btn">Get Started</a>
+      <a href="login" class="get-started-btn">Get Started</a>
 
     </div>
   </header><!-- End Header -->
+  <!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+    <!-- ... (your existing head content) ... -->
+    <style>
+      body {
+        position: relative;
+        background: url("{% static 'assets/img/1.jpg' %}") center center fixed;
+        background-size: cover;
+        color: #fff;
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+  
+      h1.custom-text {
+        margin-top: 500px; /* Adjust the margin-top for the desired position */
+        margin-left: 50vw; /* Use viewport units for horizontal centering */
+        transform: translateY(20px); /* Initial position below the frame */
+        color: linear-gradient(to right, #ff4e50, #fc913a, #f9d423, #ede574, #e1f5c4); /* Multicolor gradient */
+       -webkit-background-clip: text; /* Apply gradient only to the text */
+        opacity: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 6em; /* Use a suitable font-size */
+        animation: fadeInAndSlide 2s ease forwards;
+      }
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex justify-content-center align-items-center">
-    <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
-      <h1>Learning Today,<br>Leading Tomorrow</h1>
-      <h2>Education is the key to unlocking one's potential and shaping a brighter future.</h2>
-      <a href="courses.html" class="btn-get-started">Get Started</a>
-    </div>
-  </section><!-- End Hero -->
-
-  <main id="main">
-
+      h3.custom-text {
+        margin-top: 400px; /* Adjust the margin-top for the desired position */
+        margin-left: 50vw; /* Use viewport units for horizontal centering */
+        transform: translateY(20px); /* Initial position below the frame */
+        color: linear-gradient(to right, #ff4e50, #fc913a, #f9d423, #ede574, #e1f5c4); /* Multicolor gradient */
+       -webkit-background-clip: text; /* Apply gradient only to the text */
+        opacity: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1em; /* Use a suitable font-size */
+        animation: fadeInAndSlide 2s ease forwards;
+      }
+  
+      @keyframes fadeInAndSlide {
+        to {
+          opacity: 1;
+          transform: translateY(0); /* Final position at the top */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+  
+    <!-- Text with animation -->
+    <h1 class="custom-text" style="margin-top: 250px; margin-left: 100px; color: white;">ShareStudy Hub</h1>
+    <h3 class="custom-text" style="margin-top: 0px; margin-left: 110px; color: white;">"Education unlocks doors to a world of possibilities."</h3>
+    <h3 class="custom-text" style="margin-top: 305px; margin-left: 110px; color: white;"></h3>
+    <!-- ... (your existing body content) ... -->
     
-
-    <!-- ======= Why Us Section ======= -->
-    <section id="why-us" class="why-us">
-      <div class="container" data-aos="fade-up">
-
-        <div class="row">
-          <div class="col-lg-4 d-flex align-items-stretch">
-            <div class="content">
-              <h3>Why Choose ShareStudy Hub?</h3>
-              <p>
-                Education is vital because it empowers individuals, fosters personal growth, and drives societal
-                 advancement through knowledge, critical thinking, and expanded opportunities.
-              </p>
-              <div class="text-center">
-                <a href="about.html" class="more-btn">Learn More <i class="bx bx-chevron-right"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-8 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-            <div class="icon-boxes d-flex flex-column justify-content-center">
-              <div class="row">
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box mt-4 mt-xl-0">
-                    <i class="bx bx-receipt"></i>
-                    <h4>Note Sharing</h4>
-                    <p>Note sharing is the act of distributing or exchanging written or digital notes, typically for educational.</p>
-                  </div>
-                </div>
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box mt-4 mt-xl-0">
-                    <i class="bx bx-cube-alt"></i>
-                    <h4>Online Examination</h4>
-                    <p>Online examination refers to the process of conducting tests or assessments via the internet, allowing participants to complete them remotely.</p>
-                  </div>
-                </div>
-                <div class="col-xl-4 d-flex align-items-stretch">
-                  <div class="icon-box mt-4 mt-xl-0">
-                    <i class="bx bx-images"></i>
-                    <h4>Certificate</h4>
-                    <p>A certificate is an official document or written statement that verifies and attests to the completion, achievement, or qualification in a specific course, program, or skill.</p>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End .content-->
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End Why Us Section -->
-
-
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
+  
+  </body>
+  
+  </html>
   <footer id="footer">
 
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Mentor</h3>
-            <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
-          </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
+    
+    
 
     <div class="container d-md-flex py-4">
 
@@ -202,7 +149,7 @@
           <!-- You can delete the links only if you purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+          Designed by <a href="">Tom</a>
         </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
@@ -214,6 +161,7 @@
       </div>
     </div>
   </footer><!-- End Footer -->
+ 
 
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -227,6 +175,7 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+  
 
 </body>
 

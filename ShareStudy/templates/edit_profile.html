@@ -44,14 +44,14 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="index.html">ShareStudy Hub</a></h1>
+      <h1 class="logo me-auto"><a href="/loginhome">ShareStudy Hub</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="{%static '{% static 'assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a class="nav-link" href="/loginhome">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
+          {% comment %} <li class="dropdown"><a href="#"><span>Exam</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Examination</a></li>
               <li><a href="#">Exam Certificate</a></li>
@@ -60,17 +60,19 @@
               
             </ul>
           </li>
-          <li><a href="events.html">Notes</a></li>
-          <li><a href="contact.html">Assignments</a></li>
-          <li><a href="contact.html">Online Class </a></li>
-          <li><a href="">Feedback</a></li>
-          <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
-          <li><a class="nav-link" href="{% url 'handlelogout' %}">Logout</a></li>
+          <li><a href="events.html">Notes</a></li> {% endcomment %}
+          <li><a href="{% url 'assignstu_list' %}">Assignments</a></li>
+          <li><a href="{% url 'view_course_notes' %}">Notes</a></li>
+          <li><a href="{% url 'view_notifications' %}">Notification</a></li>
+          <li><a href="{% url 'submit_feedback' %}">Feedback</a></li>
+          
+          <li><a class="nav-link" href="{% url 'handlelogout' %}" id="logout-link">Logout</a></li><br>
+          
  
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
-
+      <a href="/loginhome" class="get-started-btn">Student Side</a>
 
     </div>
   </header><!-- End Header -->
@@ -104,7 +106,7 @@
                     <div class="alert alert-primary">{{status}}</div>
                 {% endif %}
                 <br><br>
-                <center><h3>Update Proflie</h3></center><br><br>
+                <center><h3>Update Profile</h3></center><br><br>
                 <div class="form-group">
                     <div class="row">
                         <div class="form-group">
@@ -126,7 +128,7 @@
                     </div>
                 </div>
                 <br><br>
-                <div class="form-group">
+                {% comment %} <div class="form-group">
                     <div class="row">
                         
                     <label for="course">Course</label>
@@ -134,7 +136,7 @@
                 <option value="">Select a Course</option>
                 {% for course in courses %}
                     <option value="{{ course.id }}">{{ course.course_name }}</option>
-                {% endfor %}
+                {% endfor %} {% endcomment %}
             </select>
                     </div>
                 </div><br><br>
@@ -149,6 +151,7 @@
         </div>
     </div>
 </div>
+
 {% endblock form %}
 <!-- ======= Footer ======= -->
 <footer id="footer">
