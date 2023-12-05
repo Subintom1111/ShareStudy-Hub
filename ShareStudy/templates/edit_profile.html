@@ -100,54 +100,48 @@
                 <img src="{% static 'img/user.png' %}" style="height:150px;width:150px;border-radius:50%">
                 {% endif %}
             </div>
-            <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+            <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" id="profileForm">
+              {% csrf_token %}
+              
                 {% if status %}
                     <div class="alert alert-primary">{{status}}</div>
                 {% endif %}
                 <br><br>
                 <center><h3>Update Profile</h3></center><br><br>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="form-group">
-                       <label for="id_first_name">First Name:</label>
-                       <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
-                       <span id="first-name-error" class="text-danger"></span>
-                       </div>
-                        <br><br>
-                        <div class="form-group">
-                        <label for="id_last_name">Last Name:</label>
-                        <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
-                        <span id="last-name-error" class="text-danger"></span>
-                        </div><br><br>
-                        <div class="col-md-6">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">
-                        </div>
-                        
-                    </div>
-                </div>
-                <br><br>
-                {% comment %} <div class="form-group">
-                    <div class="row">
-                        
-                    <label for="course">Course</label>
-                 <select name="course" id="course" class="form-control">
-                <option value="">Select a Course</option>
-                {% for course in courses %}
-                    <option value="{{ course.id }}">{{ course.course_name }}</option>
-                {% endfor %} {% endcomment %}
-            </select>
-                    </div>
-                </div><br><br>
-                
-                <center>
-                <div class="form-group">
-                    <input type="submit" name="changeprofile" value="Save Changes" class="btn btn-primary" style="width:50%;border-radius:20px;">
-                </div>
-                </center>
-
-            </form>
+              <!-- Your existing form content here -->
+  
+              <div class="form-group">
+                  <div class="row">
+                      <div class="form-group">
+                          <label for="id_first_name">First Name:</label>
+                          <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+                          <span id="first-name-error" class="text-danger"></span><br>
+                      </div>
+                      <br><br>
+                      <div class="form-group">
+                          <label for="id_last_name">Last Name:</label>
+                          <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
+                          <span id="last-name-error" class="text-danger"></span><br>
+                      </div><br><br>
+  
+                      <div class="col-md-6">
+                          <label>Email</label>
+                          <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">
+                      </div>
+                  </div>
+              </div>
+              <br>
+            </div>
+              <!-- Your existing form content here -->
+  
+              <br><br>
+  
+              <center>
+                  <div class="form-group">
+                      <input type="submit" name="changeprofile" value="Save Changes" class="btn btn-primary" style="width:50%;border-radius:20px;">
+                  </div>
+              </center>
+          </form>
         </div>
     </div>
 </div>
@@ -192,7 +186,60 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
-
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Function to validate first name
+      function validateFirstName() {
+          var firstName = $('#id_first_name').val().trim();
+          var firstNameError = $('#first-name-error');
+  
+          if (firstName === '') {
+              firstNameError.text('First Name is required').css('color', 'red');
+              return false;
+          } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+              firstNameError.text('Only letters are allowed').css('color', 'red');
+              return false;
+          } else {
+              firstNameError.text('').css('color', 'green');
+              return true;
+          }
+      }
+  
+      // Function to validate last name
+      function validateLastName() {
+          var lastName = $('#id_last_name').val().trim();
+          var lastNameError = $('#last-name-error');
+  
+          if (lastName === '') {
+              lastNameError.text('Last Name is required').css('color', 'red');
+              return false;
+          } else if (!/^[a-zA-Z]+$/.test(lastName)) {
+              lastNameError.text('Only letters are allowed').css('color', 'red');
+              return false;
+          } else {
+              lastNameError.text('').css('color', 'green');
+              return true;
+          }
+      }
+  
+      // Event listener for form submission
+      $('#profileForm').submit(function (event) {
+          // Validate each field
+          var isValidFirstName = validateFirstName();
+          var isValidLastName = validateLastName();
+  
+          // Submit the form only if all validations pass
+          if (!(isValidFirstName && isValidLastName)) {
+              event.preventDefault();
+          }
+      });
+  
+      // Event listeners for real-time validation
+      $('#id_first_name').on('input', validateFirstName);
+      $('#id_last_name').on('input', validateLastName);
+  });
+  </script>
 </body>
 
 </html>
@@ -200,151 +247,3 @@
 
  
 
-
-{% comment %} {% extends "base.html" %} {% endcomment %}
-
-
-{% comment %} {% block style %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<style>
-  /* Add a hover animation to the Update button */
-  .animated-btn {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .animated-btn:hover {
-    background-color: #007bff; /* Change to your desired color */
-    color: #fff; /* Change to your desired color */
-  }
-
-  /* Set the body background color */
-  body {
-    background-color: orange; /* Change to your desired background color */
-  }
-</style>
-
-{% endblock style %}
-
-
-
-
-{% block body %}
-
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-     
-      <div class="card">
-        <div class="card-header">
-         
-          <h2 class="text-center">Update Profile</h2>
-        </div>
-        <div class="card-body">
-          {% for message in messages %}
-
-          <div class="alert alert-{{message.tags}}" role="alert">
-            <strong>{{message}}</strong>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
-          
-          {% endfor %}
-          
-          <form id="update-profile-form" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="id_first_name">First Name:</label>
-              <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
-              <span id="first-name-error" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-              <label for="id_last_name">Last Name:</label>
-              <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
-              <span id="last-name-error" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-              <label for="id_email">Email:</label>
-              <input type="email" name="email" class="form-control" id="id_email" value="{{ user.email }}">
-              <span id="email-error" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-              <label>Contact Number</label>
-              <input type="text" value="{{data.contact}}" class="form-control" name="contact" placeholder="Enter Contact Number" pattern="[0-9]{10}" title="Number must contain 10 digits only!!">
-          </div>
-          <div class="form-group">
-            <div class="row">
-                
-                <div class="col-md-6">
-                    <label>Course</label>
-                    <select name="course" value="{{data.course}}" class="form-control">
-                      <option value="">Select a Course</option>
-
-                      {% if data.course == "Software" %}
-                      <option value="Software" selected>Software</option>
-                      {% else %}
-                      <option value="Software">Software</option>
-                      {% endif %}
-                      
-                      {% if data.course == "Cloud" %}
-                      <option value="Cloud" selected>Cloud</option>
-                      {% else %}
-                      <option value="Cloud">Cloud</option>
-                      {% endif %}
-
-                      {% if data.course == "Hardware" %}
-                      <option value="Hardware" selected>Hardware</option>
-                      {% else %}
-                      <option value="Hardware">Hardware</option>
-                      {% endif %}
-                  </select>
-                    
-                </div>
-            </div>
-        </div><br><br>
-        <div class="form-group">
-          <div class="row">
-              
-              <div class="col-md-6">
-                  <label>Gender</label>
-        
-                  <select name="gender" value="{{data.gender}}" class="form-control">
-                      <option value="">Select a Gender</option>
-
-                      {% if data.gender == "Male" %}
-                      <option value="Male" selected>Male</option>
-                      {% else %}
-                      <option value="Male">Male</option>
-                      {% endif %}
-                      
-                      {% if data.gender == "Female" %}
-                      <option value="Female" selected>Female</option>
-                      {% else %}
-                      <option value="Female">Female</option>
-                      {% endif %}
-
-                      {% if data.gender == "Others" %}
-                      <option value="Others" selected>Others</option>
-                      {% else %}
-                      <option value="Others">Others</option>
-                      {% endif %}
-                  </select>
-              </div>
-          </div>
-      </div>
-            
-            <button type="submit" class="btn btn-primary btn-block animated-btn">Update</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-{% endblock body %} {% endcomment %}

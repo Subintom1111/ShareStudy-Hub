@@ -61,7 +61,7 @@
           </li>
           <li><a href="events.html"> Upload Notes</a></li> {% endcomment %}
           <li><a href="http://127.0.0.1:8000/assignment_list">Assignment Qns</a></li>
-          {% comment %} <li><a href="contact.html">Online Class </a></li> {% endcomment %}
+          <li><a href="http://127.0.0.1:8000/upload_course_notes">Upload Notes </a></li>
           <li><a href="http://127.0.0.1:8000/edit_profilete/">Edit Profile </a></li>
           <li><a class="nav-link" href="{% url 'handlelogout' %}" id="logout-link">Logout</a></li><br>
           <li><li>
@@ -103,45 +103,51 @@
                 <img src="{% static 'img/user.png' %}" style="height:150px;width:150px;border-radius:50%">
                 {% endif %}
             </div>
-            <form action="{% url 'edit_profilete' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+            
+
+
+            <form action="{% url 'edit_profilete' %}" method="post" enctype="multipart/form-data" id="profileForm">
+              {% csrf_token %}
+              
                 {% if status %}
                     <div class="alert alert-primary">{{status}}</div>
                 {% endif %}
                 <br><br>
                 <center><h3>Update Profile</h3></center><br><br>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="form-group">
-                       <label for="id_first_name">First Name:</label>
-                       <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
-                       <span id="first-name-error" class="text-danger"></span><br>
-                       </div>
-                        <br><br>
-                        <div class="form-group">
-                        <label for="id_last_name">Last Name:</label>
-                        <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
-                        <span id="last-name-error" class="text-danger"></span><br>
-                        </div><br><br>
-                        
-                        <div class="col-md-6">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">
-                        </div>
-                      
-                    </div>
-                </div>
-                <br>
-                
-                </div><br><br>
-                
-                <center>
-                <div class="form-group">
-                    <input type="submit" name="changeprofile" value="Save Changes" class="btn btn-primary" style="width:50%;border-radius:20px;">
-                </div>
-                </center>
-
-            </form>
+              <!-- Your existing form content here -->
+  
+              <div class="form-group">
+                  <div class="row">
+                      <div class="form-group">
+                          <label for="id_first_name">First Name:</label>
+                          <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+                          <span id="first-name-error" class="text-danger"></span><br>
+                      </div>
+                      <br><br>
+                      <div class="form-group">
+                          <label for="id_last_name">Last Name:</label>
+                          <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ user.last_name }}">
+                          <span id="last-name-error" class="text-danger"></span><br>
+                      </div><br><br>
+  
+                      <div class="col-md-6">
+                          <label>Email</label>
+                          <input type="email" class="form-control" name="email" placeholder="Enter Name" value="{{user.email}}">
+                      </div>
+                  </div>
+              </div>
+              <br>
+            </div>
+              <!-- Your existing form content here -->
+  
+              <br><br>
+  
+              <center>
+                  <div class="form-group">
+                      <input type="submit" name="changeprofile" value="Save Changes" class="btn btn-primary" style="width:50%;border-radius:20px;">
+                  </div>
+              </center>
+          </form>
         </div>
     </div>
 </div>
@@ -185,7 +191,63 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+  <!-- Add this script tag to include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+  <script>
+    $(document).ready(function () {
+      // Function to validate first name
+      function validateFirstName() {
+          var firstName = $('#id_first_name').val().trim();
+          var firstNameError = $('#first-name-error');
+  
+          if (firstName === '') {
+              firstNameError.text('First Name is required').css('color', 'red');
+              return false;
+          } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+              firstNameError.text('Only letters are allowed').css('color', 'red');
+              return false;
+          } else {
+              firstNameError.text('').css('color', 'green');
+              return true;
+          }
+      }
+  
+      // Function to validate last name
+      function validateLastName() {
+          var lastName = $('#id_last_name').val().trim();
+          var lastNameError = $('#last-name-error');
+  
+          if (lastName === '') {
+              lastNameError.text('Last Name is required').css('color', 'red');
+              return false;
+          } else if (!/^[a-zA-Z]+$/.test(lastName)) {
+              lastNameError.text('Only letters are allowed').css('color', 'red');
+              return false;
+          } else {
+              lastNameError.text('').css('color', 'green');
+              return true;
+          }
+      }
+  
+      // Event listener for form submission
+      $('#profileForm').submit(function (event) {
+          // Validate each field
+          var isValidFirstName = validateFirstName();
+          var isValidLastName = validateLastName();
+  
+          // Submit the form only if all validations pass
+          if (!(isValidFirstName && isValidLastName)) {
+              event.preventDefault();
+          }
+      });
+  
+      // Event listeners for real-time validation
+      $('#id_first_name').on('input', validateFirstName);
+      $('#id_last_name').on('input', validateLastName);
+  });
+  </script>
+  
 </body>
 
 </html>

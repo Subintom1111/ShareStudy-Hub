@@ -352,25 +352,12 @@ def edit_profilete(request):
         first_name = request.POST.get('first_name','')
         last_name = request.POST.get('last_name','')
         email = request.POST.get('email','')
-        contact = request.POST.get('contact','')
-        course = request.POST.get('course','')
-        gender = request.POST.get('gender','')
+       
         if User.objects.filter(username=email).exclude(id=request.user.id).exists():
             messages.warning(request, "Email is already taken")
             return redirect('edit_profilete')  # Redirect to the same page with the warning message
 
-        # Validate phone
-        if Profilete.objects.filter(contact=contact).exclude(user=request.user).exists():
-            messages.warning(request, "Phone number is already taken")
-            return redirect('edit_profilete')  # Redirect to the same page with the warning message
-
-        # Validate course
-        if Profilete.objects.filter(course=course).exclude(user=request.user).exists():
-            return redirect('edit_profilete')
         
-        # Validate gender
-        if Profilete.objects.filter(gender=gender).exclude(user=request.user).exists():
-            return redirect('edit_profilete')
         
         
         if email != request.user.email:
@@ -410,9 +397,6 @@ def edit_profilete(request):
         
         # Update the Profile model fields
         profilete, created = Profilete.objects.get_or_create(user=user)
-        profilete.contact = contact
-        profilete.course = course
-        profilete.gender = gender
         profilete.save()
         
         # Logout the user and redirect to the signup page
